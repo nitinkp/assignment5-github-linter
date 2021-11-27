@@ -8,24 +8,27 @@ folder_name = 'files_from_git'
 
 try:
     def folder_remover(foldername):
-        for root, dir, files in os.walk(foldername, topdown = False):
-            for file in files:
-                filename = os.path.join(root, file)
+        for first, second, third in os.walk(foldername, topdown=False):
+            for j in third:
+                filename = os.path.join(first, j)
                 os.chmod(filename, stat.S_IWUSR)
                 os.remove(filename)
-            for file in dir:
-                os.rmdir(os.path.join(root, file))
+            for j in second:
+                os.rmdir(os.path.join(first, j))
 
         os.rmdir(foldername)
 
+
     folder_remover(folder_name)
+
 except:
     pass
 
 site_name = input("enter public github site, remember to begin with https:// : ")
 site = requests.get(site_name)
-Repo.clone_from(site_name + '.git', folder_name)
-print(site.status_code)
+git_site = site_name + ".git"
+Repo.clone_from(git_site, folder_name)
+print(site.status_code)  # successful connection
 
 extension = input("enter the file extension: whether .py or .js or .go or .rb:  ")
 ex_allowed = ['.py', '.js', '.go', '.rb']
@@ -42,72 +45,79 @@ else:
     print("language not in allowed list of languages")
 
 out1 = input("Enter the text file to write output 1:  ")
+if len(out1) == 0:
+    print("Please enter file for output1")
+
 out2 = input("Enter the text file to write output 2:  ")
+if len(out2) == 0:
+    print("Please enter file for output2")
 
-py_paths = []
-go_paths = []
-js_paths = []
-ruby_paths = []
+py_links = []
+ruby_links = []
+js_links = []
+go_links = []
 
-for root, dir, files in os.walk(r'files_from_git'):
-    for file in files:
+for f1, f2, f3 in os.walk(r'files_from_git'):
+    for file in f3:
         if file.endswith('.py'):
-            py_paths.append(os.path.join(root, file))
+            py_links.append(os.path.join(f1, file))
         if file.endswith('.go'):
-            go_paths.append(os.path.join(root, file))
+            go_links.append(os.path.join(f1, file))
         if file.endswith('.js'):
-            js_paths.append(os.path.join(root, file))
+            js_links.append(os.path.join(f1, file))
         if file.endswith('.rb'):
-            ruby_paths.append(os.path.join(root, file))
+            ruby_links.append(os.path.join(f1, file))
 # out=site.text
 i = 0
 # print(py_paths)
 
-py_codes = []
-while i < len(py_paths):
-    with open(py_paths[i]) as op:
+py_text = []
+while i < len(py_links):
+    with open(py_links[i]) as op:
         try:
             contents = op.read()
 
-            py_codes.append(contents)
+            py_text.append(contents)
         except:
             pass
     i = i + 1
 
-ruby_codes = []
-i=0
-while i < len(ruby_paths):
-    with open(ruby_paths[i]) as r:
+ruby_text = []
+i = 0
+while i < len(ruby_links):
+    with open(ruby_links[i]) as r:
         try:
             cons = r.read()
 
-            ruby_codes.append(cons)
+            ruby_text.append(cons)
         except:
             pass
     i = i + 1
 
-js_codes = []
+js_text = []
 # print(js_paths)
-i=0
-while i < len(js_paths):
-    with open(js_paths[i]) as f:
+i = 0
+while i < len(js_links):
+    with open(js_links[i]) as f:
         try:
             cont = f.read()
-            js_codes.append(cont)
+            js_text.append(cont)
         except:
             pass
     i = i + 1
 
-go_codes = []
-i=0
-while i < len(go_paths):
-    with open(go_paths[i]) as g:
+go_text = []
+i = 0
+while i < len(go_links):
+    with open(go_links[i]) as g:
         try:
             con = g.read()
-            go_codes.append(con)
+            go_text.append(con)
         except:
             pass
     i = i + 1
+
+
 #
 # print("helloo")
 # print(go_codes)
@@ -154,17 +164,17 @@ def parser(source, parser1):
     list1 = []
 
     def node_parser(root1):
-        if len(root1.children) == 0:
-            return
-        else:
+        if len(root1.children) != 0:
             for j in root1.children:
                 if j.type == 'identifier':
                     list1.append(j)
 
                 node_parser(j)
+        else:
+            return
 
-    tree = parser1.parse(bytes(source, "utf8"))
-    root_node = tree.root_node
+    tree_name = parser1.parse(bytes(source, "utf8"))
+    root_node = tree_name.root_node
     node_parser(root_node)
     # print(list1)
     return list1
@@ -175,13 +185,13 @@ py_ids = []
 
 def py_printer():
     file_out = ""
-    for i in range(len(py_codes)):
+    for i in range(len(py_text)):
         # print("output for", py_paths[i])
-        py_list = parser(py_codes[i], py_parser)
-        code = py_codes[i].split('\n')
+        py_list = parser(py_text[i], py_parser)
+        code = py_text[i].split('\n')
         ids = []
 
-        file_out += "\noutput for: " + str(py_paths[i]) + "\n\n"
+        file_out += "\noutput for: " + str(py_links[i]) + "\n\n"
         for e in py_list:
             row = e.start_point[0]
             col = e.start_point[1]
@@ -216,11 +226,11 @@ def py_printer():
 
 def ruby_printer():
     file_out = ""
-    for i in range(len(ruby_codes)):
-        file_out += "\noutput for: " + str(ruby_paths[i]) + "\n\n"
+    for i in range(len(ruby_text)):
+        file_out += "\noutput for: " + str(ruby_links[i]) + "\n\n"
         # print("output for", ruby_paths[i])
-        ruby_list = parser(ruby_codes[i], ruby_parser)
-        code = ruby_codes[i].split('\n')
+        ruby_list = parser(ruby_text[i], ruby_parser)
+        code = ruby_text[i].split('\n')
         ids = []
         for e in ruby_list:
             row = e.start_point[0]
@@ -240,11 +250,11 @@ def ruby_printer():
 
 def js_printer():
     file_out = ""
-    for i in range(len(js_codes)):
-        file_out += "\noutput for: " + str(js_paths[i]) + "\n\n"
+    for i in range(len(js_text)):
+        file_out += "\noutput for: " + str(js_links[i]) + "\n\n"
         # print("output for", js_paths[i])
-        js_list = parser(js_codes[i], js_parser)
-        code = js_codes[i].split('\n')
+        js_list = parser(js_text[i], js_parser)
+        code = js_text[i].split('\n')
         ids = []
         for e in js_list:
             row = e.start_point[0]
@@ -264,13 +274,13 @@ def js_printer():
 def go_printer():
     file_out = ""
     print("nithin")
-    print(go_codes)
-    for i in range(len(go_codes)):
-        file_out += "\noutput for: " + str(go_paths[i]) + "\n\n"
+    print(go_text)
+    for i in range(len(go_text)):
+        file_out += "\noutput for: " + str(go_links[i]) + "\n\n"
         # print("output for", go_paths[i])
-        go_list = parser(go_codes[i], go_parser)
+        go_list = parser(go_text[i], go_parser)
         # print(go_list)
-        code = go_codes[i].split('\n')
+        code = go_text[i].split('\n')
         ids = []
         for e in go_list:
             row = e.start_point[0]
