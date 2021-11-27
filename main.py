@@ -7,8 +7,8 @@ import stat
 folder_name = 'files_from_git'
 
 try:
-    def folder_remover(foldername):
-        for first, second, third in os.walk(foldername, topdown=False):
+    def folder_remover(folder):
+        for first, second, third in os.walk(folder, topdown=False):
             for j in third:
                 filename = os.path.join(first, j)
                 os.chmod(filename, stat.S_IWUSR)
@@ -16,7 +16,7 @@ try:
             for j in second:
                 os.rmdir(os.path.join(first, j))
 
-        os.rmdir(foldername)
+        os.rmdir(folder)
 
 
     folder_remover(folder_name)
@@ -57,7 +57,7 @@ ruby_links = []
 js_links = []
 go_links = []
 
-for f1, f2, f3 in os.walk(r'files_from_git'):
+for f1, f2, f3 in os.walk(folder_name):
     for file in f3:
         if file.endswith('.py'):
             py_links.append(os.path.join(f1, file))
@@ -223,7 +223,7 @@ def py_printer():
 # for id in py_ids:
 #     print(id)
 
-
+rb_ids = []
 def ruby_printer():
     file_out = ""
     for i in range(len(ruby_text)):
@@ -243,11 +243,13 @@ def ruby_printer():
 
             file1.write(file_out)
             file1.close()
+            ids.append(code[row][col:e.end_point[1]])
+        rb_ids.append(ids)
         #     print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
         # print("**********************************************")
         # print('\n')
 
-
+js_ids = []
 def js_printer():
     file_out = ""
     for i in range(len(js_text)):
@@ -266,11 +268,13 @@ def js_printer():
 
             file1.write(file_out)
             file1.close()
+            ids.append(code[row][col:e.end_point[1]])
+        js_ids.append(ids)
         #     print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
         # print("**********************************************")
         # print('\n')
 
-
+go_ids = []
 def go_printer():
     file_out = ""
     # print("nithin")
@@ -292,6 +296,8 @@ def go_printer():
 
             file1.write(file_out)
             file1.close()
+            ids.append(code[row][col:e.end_point[1]])
+        js_ids.append(ids)
         #     print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
         # print("**********************************************")
         # print('\n')

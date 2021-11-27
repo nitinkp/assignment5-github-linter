@@ -2,7 +2,7 @@ import main
 
 shortExceptions = ['c', 'd', 'e', 'g', 'i', 'in', 'inOut', 'j', 'k', 'm', 'n', 'o', 'out', 't', 'x', 'y', 'z']
 
-codes = main.py_ids
+codes = main.py_ids + main.js_ids + main.rb_ids + main.go_ids
 
 # if code in shortExceptions:
 for code in codes:
@@ -22,10 +22,11 @@ for code in codes:
 # if either starting or ending with _
 for code in codes:
     outs = ""
+    outs += "\n\nStart or end with _ \n\n"
     for c in code:
         if c[0] == '_' or c[len(c) - 1] == '_':
             outs += c + "\n"
-            file1 = open(main.out2, "w")
+            file1 = open(main.out2, "a")
 
             file1.write(outs)
             file1.close()
