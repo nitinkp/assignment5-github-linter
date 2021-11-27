@@ -1,7 +1,6 @@
 import requests
 from tree_sitter import Language, Parser
 import os
-import re
 from git import Repo
 import stat
 
@@ -19,13 +18,13 @@ try:
 
         os.rmdir(foldername)
 
+
     folderremover(folder_name)
 except:
     pass
 
-
-#site_name = input("enter public github site, remember to begin with https:// : ")
-site_name='https://github.com/Harsha2871/SdAllCodes'
+# site_name = input("enter public github site, remember to begin with https:// : ")
+site_name = 'https://github.com/Harsha2871/SdAllCodes'
 site = requests.get(site_name)
 Repo.clone_from(site_name + '.git', folder_name)
 print(site.status_code)
@@ -81,9 +80,9 @@ ruby_codes = []
 while i < len(ruby_paths):
     with open(ruby_paths[i]) as rb:
         try:
-            conts = rb.read()
+            cons = rb.read()
 
-            ruby_codes.append(conts)
+            ruby_codes.append(cons)
         except:
             pass
     i = i + 1
@@ -103,8 +102,8 @@ go_codes = []
 while i < len(go_paths):
     with open(go_paths[i]) as go:
         try:
-            conts = go.read()
-            go_codes.append(conts)
+            contts = go.read()
+            go_codes.append(contts)
         except:
             pass
     i = i + 1
@@ -170,19 +169,26 @@ py_ids = []
 
 
 def py_printer():
+    file_out = ""
     for i in range(len(py_codes)):
-        print("output for", py_paths[i])
+        # print("output for", py_paths[i])
         py_list = parser(py_codes[i], py_parser)
         code = py_codes[i].split('\n')
         ids = []
+
+        file_out += "\noutput for: " + str(py_paths[i]) + "\n\n"
         for e in py_list:
             row = e.start_point[0]
             col = e.start_point[1]
             # print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
-            file_out = ""
-            file_out += code[row][col:e.end_point[1]] + " row num " + str(row) + " col num " + str(col) + "\n"
+
+            file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
+                        + str(col) + "\n"
             file1 = open(out1, 'w')
+            # print(file_out)
+
             file1.write(file_out)
+            file1.close()
             ids.append(code[row][col:e.end_point[1]])
         py_ids.append(ids)
 
@@ -204,45 +210,72 @@ def py_printer():
 
 
 def ruby_printer():
+    file_out = ""
     for i in range(len(ruby_codes)):
-        print("output for", ruby_paths[i])
+        file_out += "\noutput for: " + str(ruby_paths[i]) + "\n\n"
+        # print("output for", ruby_paths[i])
         ruby_list = parser(ruby_codes[i], ruby_parser)
         code = ruby_codes[i].split('\n')
-        ids = []
+        # ids = []
         for e in ruby_list:
             row = e.start_point[0]
             col = e.start_point[1]
-            print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
-        print("**********************************************")
-        print('\n')
+            file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
+                        + str(col) + "\n"
+            file1 = open(out1, 'w')
+            # print(file_out)
+
+            file1.write(file_out)
+            file1.close()
+        #     print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
+        # print("**********************************************")
+        # print('\n')
 
 
 def js_printer():
+    file_out = ""
     for i in range(len(js_codes)):
-        print("output for", js_paths[i])
+        file_out += "\noutput for: " + str(js_paths[i]) + "\n\n"
+        # print("output for", js_paths[i])
         ruby_list = parser(js_codes[i], js_parser)
         code = js_codes[i].split('\n')
         ids = []
         for e in ruby_list:
             row = e.start_point[0]
             col = e.start_point[1]
-            print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
-        print("**********************************************")
-        print('\n')
+            file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
+                        + str(col) + "\n"
+            file1 = open(out1, 'w')
+            # print(file_out)
+
+            file1.write(file_out)
+            file1.close()
+        #     print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
+        # print("**********************************************")
+        # print('\n')
 
 
 def go_printer():
+    file_out = ""
     for i in range(len(go_codes)):
-        print("output for", go_paths[i])
+        file_out += "\noutput for: " + str(go_paths[i]) + "\n\n"
+        # print("output for", go_paths[i])
         ruby_list = parser(go_codes[i], go_parser)
         code = go_codes[i].split('\n')
-        ids = []
+        # ids = []
         for e in ruby_list:
             row = e.start_point[0]
             col = e.start_point[1]
-            print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
-        print("**********************************************")
-        print('\n')
+            file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
+                        + str(col) + "\n"
+            file1 = open(out1, 'w')
+            # print(file_out)
+
+            file1.write(file_out)
+            file1.close()
+        #     print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
+        # print("**********************************************")
+        # print('\n')
 
 
 if language == "python":
