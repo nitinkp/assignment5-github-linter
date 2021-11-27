@@ -7,26 +7,31 @@ import stat
 
 folder_name = 'files_from_git'
 
-# def folderremover(foldername):
-#     for root, dir, files in os.walk(foldername, topdown=False):
-#         for file in files:
-#             filename = os.path.join(root, file)
-#             os.chmod(filename, stat.S_IWUSR)
-#             os.remove(filename)
-#         for file in dir:
-#             os.rmdir(os.path.join(root, file))
-#     os.rmdir(foldername)
+try:
+    def folderremover(foldername):
+        for root, dir, files in os.walk(foldername, topdown=False):
+            for file in files:
+                filename = os.path.join(root, file)
+                os.chmod(filename, stat.S_IWUSR)
+                os.remove(filename)
+            for file in dir:
+                os.rmdir(os.path.join(root, file))
 
-# folderremover(folder_name)
+        os.rmdir(foldername)
+
+    folderremover(folder_name)
+except:
+    pass
 
 
-site_name = input("enter public github site, remember to begin with https:// : ")
+#site_name = input("enter public github site, remember to begin with https:// : ")
+site_name='https://github.com/Harsha2871/SdAllCodes'
 site = requests.get(site_name)
 Repo.clone_from(site_name + '.git', folder_name)
 print(site.status_code)
 
-extension = input("enter the file extension: whether .py or .js or .go or .rb")
-ex_allowed = ['.py','.js','.go','.rb']
+extension = input("enter the file extension: whether .py or .js or .go or .rb:  ")
+ex_allowed = ['.py', '.js', '.go', '.rb']
 if extension in ex_allowed:
     print("allowed extension")
 else:
@@ -39,9 +44,8 @@ if language in allowed:
 else:
     print("language not in allowed list of languages")
 
-out1 = input("Enter the text file to write output 1")
-out2 = input("Enter the text file to write output 2") #
-
+out1 = input("Enter the text file to write output 1:  ")
+out2 = input("Enter the text file to write output 2:  ")
 
 py_paths = []
 go_paths = []
@@ -106,15 +110,15 @@ while i < len(go_paths):
     i = i + 1
 
 
-def folderremover(top):
-    for root, dirs, files in os.walk(top, topdown=False):
+def folderremover(folder_to_remove):
+    for root, dirs, files in os.walk(folder_to_remove, topdown=False):
         for name in files:
             filename = os.path.join(root, name)
             os.chmod(filename, stat.S_IWUSR)
             os.remove(filename)
         for name in dirs:
             os.rmdir(os.path.join(root, name))
-    os.rmdir(top)
+    os.rmdir(folder_to_remove)
 
 
 folderremover(folder_name)
@@ -144,7 +148,7 @@ go_parser.set_language(GO_LANGUAGE)
 
 
 def parser(source, parser1):
-    list = []
+    list1 = []
 
     def node_parser(root1):
         if len(root1.children) == 0:
@@ -152,14 +156,14 @@ def parser(source, parser1):
         else:
             for j in root1.children:
                 if j.type == 'identifier':
-                    list.append(j)
+                    list1.append(j)
 
                 node_parser(j)
 
     tree = parser1.parse(bytes(source, "utf8"))
     root_node = tree.root_node
     node_parser(root_node)
-    return list
+    return list1
 
 
 py_ids = []
@@ -174,11 +178,29 @@ def py_printer():
         for e in py_list:
             row = e.start_point[0]
             col = e.start_point[1]
-            print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
+            # print(code[row][col:e.end_point[1]], "Row Num", row, " Column Num", col)
+            file_out = ""
+            file_out += code[row][col:e.end_point[1]] + " row num " + str(row) + " col num " + str(col) + "\n"
+            file1 = open(out1, 'w')
+            file1.write(file_out)
             ids.append(code[row][col:e.end_point[1]])
         py_ids.append(ids)
-        print("**********************************************")
-        print('\n')
+
+        # file1 = open(out1, 'a')
+        #
+        # for id in py_ids:
+        #
+        #     for i in id:
+        #         i=i+'\n'
+        #         file1.write(i)
+
+        # print("**********************************************")
+        # print('\n')
+
+
+# file1 = open(out1, 'w')
+# for id in py_ids:
+#     print(id)
 
 
 def ruby_printer():
@@ -231,6 +253,9 @@ elif language == "javascript":
     js_printer()
 elif language == "go":
     go_printer()
+
+# file1 = open(out1,'w')
+# file1.write("haha")
 
 # for id in py_ids:
 #     for i in id:
