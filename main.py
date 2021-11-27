@@ -7,8 +7,8 @@ import stat
 folder_name = 'files_from_git'
 
 try:
-    def folderremover(foldername):
-        for root, dir, files in os.walk(foldername, topdown=False):
+    def folder_remover(foldername):
+        for root, dir, files in os.walk(foldername, topdown = False):
             for file in files:
                 filename = os.path.join(root, file)
                 os.chmod(filename, stat.S_IWUSR)
@@ -18,13 +18,11 @@ try:
 
         os.rmdir(foldername)
 
-
-    folderremover(folder_name)
+    folder_remover(folder_name)
 except:
     pass
 
-# site_name = input("enter public github site, remember to begin with https:// : ")
-site_name = 'https://github.com/Harsha2871/SdAllCodes'
+site_name = input("enter public github site, remember to begin with https:// : ")
 site = requests.get(site_name)
 Repo.clone_from(site_name + '.git', folder_name)
 print(site.status_code)
@@ -77,10 +75,11 @@ while i < len(py_paths):
     i = i + 1
 
 ruby_codes = []
+i=0
 while i < len(ruby_paths):
-    with open(ruby_paths[i]) as rb:
+    with open(ruby_paths[i]) as r:
         try:
-            cons = rb.read()
+            cons = r.read()
 
             ruby_codes.append(cons)
         except:
@@ -89,6 +88,7 @@ while i < len(ruby_paths):
 
 js_codes = []
 # print(js_paths)
+i=0
 while i < len(js_paths):
     with open(js_paths[i]) as f:
         try:
@@ -99,17 +99,21 @@ while i < len(js_paths):
     i = i + 1
 
 go_codes = []
+i=0
 while i < len(go_paths):
-    with open(go_paths[i]) as go:
+    with open(go_paths[i]) as g:
         try:
-            contts = go.read()
-            go_codes.append(contts)
+            con = g.read()
+            go_codes.append(con)
         except:
             pass
     i = i + 1
+#
+# print("helloo")
+# print(go_codes)
+# print(go_paths)
 
-
-def folderremover(folder_to_remove):
+def folder_remover(folder_to_remove):
     for root, dirs, files in os.walk(folder_to_remove, topdown=False):
         for name in files:
             filename = os.path.join(root, name)
@@ -120,7 +124,7 @@ def folderremover(folder_to_remove):
     os.rmdir(folder_to_remove)
 
 
-folderremover(folder_name)
+folder_remover(folder_name)
 
 Language.build_library('build/my-languages.so',
                        ['tree-sitter-go', 'tree-sitter-javascript', 'tree-sitter-python', 'tree-sitter-ruby'])
@@ -162,6 +166,7 @@ def parser(source, parser1):
     tree = parser1.parse(bytes(source, "utf8"))
     root_node = tree.root_node
     node_parser(root_node)
+    # print(list1)
     return list1
 
 
@@ -216,12 +221,13 @@ def ruby_printer():
         # print("output for", ruby_paths[i])
         ruby_list = parser(ruby_codes[i], ruby_parser)
         code = ruby_codes[i].split('\n')
-        # ids = []
+        ids = []
         for e in ruby_list:
             row = e.start_point[0]
             col = e.start_point[1]
             file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
                         + str(col) + "\n"
+            # print(file_out)
             file1 = open(out1, 'w')
             # print(file_out)
 
@@ -237,10 +243,10 @@ def js_printer():
     for i in range(len(js_codes)):
         file_out += "\noutput for: " + str(js_paths[i]) + "\n\n"
         # print("output for", js_paths[i])
-        ruby_list = parser(js_codes[i], js_parser)
+        js_list = parser(js_codes[i], js_parser)
         code = js_codes[i].split('\n')
         ids = []
-        for e in ruby_list:
+        for e in js_list:
             row = e.start_point[0]
             col = e.start_point[1]
             file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
@@ -257,13 +263,16 @@ def js_printer():
 
 def go_printer():
     file_out = ""
+    print("nithin")
+    print(go_codes)
     for i in range(len(go_codes)):
         file_out += "\noutput for: " + str(go_paths[i]) + "\n\n"
         # print("output for", go_paths[i])
-        ruby_list = parser(go_codes[i], go_parser)
+        go_list = parser(go_codes[i], go_parser)
+        # print(go_list)
         code = go_codes[i].split('\n')
-        # ids = []
-        for e in ruby_list:
+        ids = []
+        for e in go_list:
             row = e.start_point[0]
             col = e.start_point[1]
             file_out += code[row][col:e.end_point[1]] + "   row num: " + str(row) + "   col num: " \
@@ -285,7 +294,10 @@ elif language == "ruby":
 elif language == "javascript":
     js_printer()
 elif language == "go":
+    # print("hello")
     go_printer()
+else:
+    print("Enter languages that are allowed")
 
 # file1 = open(out1,'w')
 # file1.write("haha")
