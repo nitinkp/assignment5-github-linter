@@ -273,8 +273,8 @@ def js_printer():
 
 def go_printer():
     file_out = ""
-    print("nithin")
-    print(go_text)
+    # print("nithin")
+    # print(go_text)
     for i in range(len(go_text)):
         file_out += "\noutput for: " + str(go_links[i]) + "\n\n"
         # print("output for", go_paths[i])
